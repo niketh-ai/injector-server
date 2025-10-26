@@ -1,19 +1,17 @@
 services:
   - type: web
     name: injector-manager
-    env: php
+    env: docker
     plan: free
-    buildCommand: "chmod +x build.sh && ./build.sh"
-    startCommand: "php -S 0.0.0.0:8000"
+    docker:
+      dockerfile: Dockerfile
     envVars:
       - key: DB_HOST
         fromDatabase:
           name: injector-db
           property: host
       - key: DB_PORT
-        fromDatabase:
-          name: injector-db
-          property: port
+        value: 5432
       - key: DB_NAME
         fromDatabase:
           name: injector-db
