@@ -1,16 +1,13 @@
 FROM php:8.2-apache
 
-# Install system dependencies
+# Install system dependencies and PostgreSQL
 RUN apt-get update && \
     apt-get install -y \
     libpq-dev \
-    zip \
-    unzip \
     git \
-    curl
-
-# Install PHP extensions
-RUN docker-php-ext-install pdo pdo_pgsql
+    curl \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install pdo pdo_pgsql pgsql
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
@@ -19,11 +16,11 @@ RUN a2enmod rewrite
 COPY . /var/www/html/
 
 # Set proper permissions
-RUN chown -R www-data:www-data /var/www/html/
-RUN chmod -R 755 /var/www/html/
-RUN chmod 644 /var/www/html/*.php
+RUN chown -R www-data:www-data /var/www/html/ && \
+    chmod -R 755 /var/www/html/ && \
+    chmod 644 /var/www/html/*.php
 
-# Create logs directory
+# Create necessary directories
 RUN mkdir -p /var/www/html/logs && \
     chown www-data:www-data /var/www/html/logs
 
