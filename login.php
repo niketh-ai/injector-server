@@ -3,7 +3,7 @@ require_once 'includes/auth.php';
 
 $auth = new Auth();
 if ($auth->isLoggedIn()) {
-    header("Location: index.php");
+    header("Location: dashboard.php");
     exit;
 }
 
@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!Security::rateLimit('login_attempts', 5, 300)) {
         $error = "Too many login attempts. Please try again later.";
     } elseif ($auth->login($username, $password)) {
-        header("Location: index.php");
+        header("Location: dashboard.php");
         exit;
     } else {
         $error = "Invalid username or password.";
@@ -45,16 +45,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required>
+                    <input type="text" id="username" name="username" value="admin" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" name="password" placeholder="Enter password" required>
                 </div>
                 
                 <button type="submit" class="btn btn-primary">Login</button>
             </form>
+            
+            <div class="login-info">
+                <p><strong>Default Login:</strong> admin / niketh123</p>
+            </div>
         </div>
     </div>
 </body>
